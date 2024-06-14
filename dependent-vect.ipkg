@@ -1,0 +1,14 @@
+package dependent-vect
+
+authors = "Denis Buzdalov"
+
+brief = "Vector data type with type of elements dependent on the index value"
+
+license = "Apache-2.0"
+
+sourcedir = "src"
+builddir = ".build"
+
+depends = fin-lizzie
+
+modules = Data.Vect.Dependent

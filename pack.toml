@@ -3,11 +3,3 @@ type = "local"
 path = "."
 ipkg = "dependent-vect.ipkg"
 test = "tests/tests.ipkg"
-
-# To be removed as soon as this package is in the current pack collection
-[custom.all.fin-lizzie]
-type   = "git"
-url    = "https://github.com/buzden/idris2-fin-lizzie"
-commit = "master"
-ipkg   = "fin-lizzie.ipkg"
-test   = "tests/tests.ipkg"

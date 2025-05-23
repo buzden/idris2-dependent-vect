@@ -30,7 +30,7 @@ tabulateI {n=S n} f = f FZ :: tabulateI (\i => f $ FS i)
 
 public export %inline
 tabulate : {n : Nat} -> {0 a : Fin n -> Type} -> ({i : Fin n} -> a i) -> DVect n a
-tabulate = tabulateI
+tabulate f = tabulateI (\i => f {i})
 
 --- Concating ---
 
@@ -62,7 +62,7 @@ mapI f (x::xs) = f FZ x :: mapI (\i => f $ FS i) xs
 
 public export %inline
 map : ({i : Fin n} -> a i -> b i) -> DVect n a -> DVect n b
-map = mapI
+map f = mapI (\i => f {i})
 
 public export %inline
 (<$>) : ({i : Fin n} -> a i -> b i) -> DVect n a -> DVect n b
@@ -79,7 +79,7 @@ mapPreI f (x::xs) = let y = f FZ [] x in y :: mapPreI (\i, ys => f (FS i) (y::ys
 
 public export %inline
 mapPre : ({i : Fin n} -> DVect (finToNat i) (b . weakenToSuper {i}) -> a i -> b i) -> DVect n a -> DVect n b
-mapPre = mapPreI
+mapPre f = mapPreI (\i => f {i})
 
 --- Conversions ---
 
@@ -90,7 +90,7 @@ downmapI f (x::xs) = f FZ x :: downmapI (\i => f $ FS i) xs
 
 public export %inline
 downmap : ({i : Fin n} -> a i -> b) -> DVect n a -> Vect n b
-downmap = downmapI
+downmap f = downmapI (\i => f {i})
 
 public export
 upmapI : ((i : Fin n) -> a -> b i) -> Vect n a -> DVect n b
@@ -99,7 +99,7 @@ upmapI f (x::xs) = f FZ x :: upmapI (\i => f $ FS i) xs
 
 public export
 upmap : ({i : Fin n} -> a -> b i) -> Vect n a -> DVect n b
-upmap = upmapI
+upmap f = upmapI (\i => f {i})
 
 --- Zippings ---
 
@@ -115,7 +115,7 @@ zipWithI f (x::xs) (y::ys) = f FZ x y :: zipWithI (\i => f $ FS i) xs ys
 
 public export %inline
 zipWith : ({i : Fin n} -> a i -> b i -> c i) -> DVect n a -> DVect n b -> DVect n c
-zipWith = zipWithI
+zipWith f = zipWithI (\i => f {i})
 
 public export
 (<*>) : DVect n (\i => a i -> b i) -> DVect n a -> DVect n b
@@ -138,7 +138,7 @@ foldlI f init (x::xs) = foldlI (\i => f $ FS i) (f FZ init x) xs
 
 public export %inline
 foldl : ({i : Fin n} -> acc -> a i -> acc) -> acc -> DVect n a -> acc
-foldl = foldlI
+foldl f = foldlI (\i => f {i})
 
 public export
 foldrI : ((i : Fin n) -> a i -> Lazy acc -> acc) -> acc -> DVect n a -> acc
@@ -147,7 +147,7 @@ foldrI f init (x::xs) = f FZ x $ foldrI (\i => f $ FS i) init xs
 
 public export %inline
 foldr : ({i : Fin n} -> a i -> Lazy acc -> acc) -> acc -> DVect n a -> acc
-foldr = foldrI
+foldr f = foldrI (\i => f {i})
 
 public export
 foldlMI : Monad m => ((i : Fin n) -> acc -> a i -> m acc) -> acc -> DVect n a -> m acc
@@ -155,7 +155,7 @@ foldlMI fm = foldlI (\i, ma, b => ma >>= flip (fm i) b) . pure
 
 public export
 foldlM : Monad m => ({i : Fin n} -> acc -> a i -> m acc) -> acc -> DVect n a -> m acc
-foldlM = foldlMI
+foldlM f = foldlMI (\i => f {i})
 
 --- Traversals ---
 
@@ -166,7 +166,7 @@ traverseI f (x::xs) = [| f FZ x :: traverseI (\i => f $ FS i) xs |]
 
 public export %inline
 traverse : Applicative f => ({i : Fin n} -> a i -> f (b i)) -> DVect n a -> f (DVect n b)
-traverse = traverseI
+traverse f = traverseI (\i => f {i})
 
 public export
 sequence : Applicative f => DVect n (f . a) -> f (DVect n a)
